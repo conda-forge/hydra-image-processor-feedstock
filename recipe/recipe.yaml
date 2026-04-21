@@ -27,7 +27,7 @@ build:
     - cmake --install build
   # Example: cuda129_np2_py314_h<hash>_<build_number>
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
-  number: 1
+  number: 2
 
 # c.f. https://github.com/conda-forge/cuda-feedstock/blob/main/recipe/doc/recipe_guide.md
 requirements:
