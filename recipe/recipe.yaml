@@ -15,7 +15,7 @@ source:
 build:
   skip:
     - osx
-    - cuda_compiler == "None"
+    - match(cuda_compiler_version, "==None")
     # Skip only during the conda-forge/staged-recipes submission process as
     # there is no CI process that supports Windows and CUDA
     - win
@@ -27,7 +27,7 @@ build:
     - cmake --install build
   # Example: cuda129_np2_py314_h<hash>_<build_number>
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
-  number: 0
+  number: 1
 
 # c.f. https://github.com/conda-forge/cuda-feedstock/blob/main/recipe/doc/recipe_guide.md
 requirements:
