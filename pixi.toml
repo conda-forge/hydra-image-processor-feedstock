@@ -5,7 +5,7 @@
 
 [workspace]
 name = "hydra-image-processor-feedstock"
-version = "3.61.0"  # conda-smithy version used to generate this file
+version = "3.60.0"  # conda-smithy version used to generate this file
 description = "Pixi configuration for conda-forge/hydra-image-processor-feedstock"
 authors = ["@conda-forge/hydra-image-processor"]
 channels = ["conda-forge"]
@@ -47,6 +47,12 @@ description = "Build hydra-image-processor-feedstock with variant linux_64_cuda_
 [tasks."inspect-linux_64_cuda_compiler_version12.9python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version12.9python3.13.____cp313.yaml"
 description = "List contents of hydra-image-processor-feedstock packages built for variant linux_64_cuda_compiler_version12.9python3.13.____cp313"
+[tasks."build-linux_64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "Build hydra-image-processor-feedstock with variant linux_64_cuda_compiler_version12.9python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "List contents of hydra-image-processor-feedstock packages built for variant linux_64_cuda_compiler_version12.9python3.14.____cp314"
 [tasks."build-linux_aarch64_cuda_compiler_version12.9python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9python3.10.____cpython.yaml"
 description = "Build hydra-image-processor-feedstock with variant linux_aarch64_cuda_compiler_version12.9python3.10.____cpython directly (without setup scripts)"
@@ -71,6 +77,12 @@ description = "Build hydra-image-processor-feedstock with variant linux_aarch64_
 [tasks."inspect-linux_aarch64_cuda_compiler_version12.9python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9python3.13.____cp313.yaml"
 description = "List contents of hydra-image-processor-feedstock packages built for variant linux_aarch64_cuda_compiler_version12.9python3.13.____cp313"
+[tasks."build-linux_aarch64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "Build hydra-image-processor-feedstock with variant linux_aarch64_cuda_compiler_version12.9python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "List contents of hydra-image-processor-feedstock packages built for variant linux_aarch64_cuda_compiler_version12.9python3.14.____cp314"
 
 [feature.smithy.dependencies]
 conda-smithy = "*"
