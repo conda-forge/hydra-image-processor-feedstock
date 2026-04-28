@@ -8,4 +8,5 @@ conda_build:
 conda_forge_output_validation: true
 provider:
   linux_aarch64: default
+  win_64: default
 test: native_and_emulated

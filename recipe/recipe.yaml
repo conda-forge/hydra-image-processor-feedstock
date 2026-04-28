@@ -16,18 +16,19 @@ build:
   skip:
     - osx
     - match(cuda_compiler_version, "==None")
-    # Skip only during the conda-forge/staged-recipes submission process as
-    # there is no CI process that supports Windows and CUDA
-    - win
   script:
     - if: win
-      then: set "CXXFLAGS=%CXXFLAGS% /openmp:llvm"
-    - cmake ${CMAKE_ARGS} -G Ninja -S . -B build
-    - cmake --build build --parallel ${CPU_COUNT}
+      then:
+        - set "CXXFLAGS=%CXXFLAGS% /openmp:llvm"
+        - cmake %CMAKE_ARGS% -G Ninja -S . -B build
+        - cmake --build build --parallel %CPU_COUNT%
+      else:
+      - cmake ${CMAKE_ARGS} -G Ninja -S . -B build
+      - cmake --build build --parallel ${CPU_COUNT}
     - cmake --install build
   # Example: cuda129_np2_py314_h<hash>_<build_number>
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
-  number: 2
+  number: 3
 
 # c.f. https://github.com/conda-forge/cuda-feedstock/blob/main/recipe/doc/recipe_guide.md
 requirements:
