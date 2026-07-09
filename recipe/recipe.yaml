@@ -19,7 +19,13 @@ build:
   # the package. conda-forge's compiler activation exports CMAKE_ARGS, which
   # scikit-build-core forwards to CMake, so NO source patches are required.
   script:
-    - python -m pip install . -vv --no-deps --no-build-isolation
+    env:
+      # Without this CMake picks the Visual Studio generator on Windows,
+      # which needs the CUDA VS-integration files that the conda-forge nvcc
+      # package does not ship. Ninja drives nvcc directly on all platforms.
+      CMAKE_GENERATOR: Ninja
+    content:
+      - python -m pip install . -vv --no-deps --no-build-isolation
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   number: 0
 
