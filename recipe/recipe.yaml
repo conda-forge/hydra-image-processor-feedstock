@@ -7,9 +7,7 @@ package:
 
 source:
   url: https://github.com/ericwait/hydra-image-processor/archive/refs/tags/v${{ version }}.tar.gz
-  # TODO: update to the v4.0.0 tarball sha256 before merging.
-  # conda-forge's autotick bot fills this in automatically on a version bump.
-  sha256: 0000000000000000000000000000000000000000000000000000000000000000
+  sha256: a3e2dd438e9c825d37491ecd2da048dddfe0222bd49f71138fff8a29ed263b15
 
 build:
   skip:
