@@ -25,6 +25,13 @@ build:
       # package does not ship. Ninja drives nvcc directly on all platforms.
       CMAKE_GENERATOR: Ninja
     content:
+      # The vs2022 activation exports CMAKE_GENERATOR_PLATFORM/TOOLSET for
+      # the Visual Studio generator when they are unset; Ninja rejects
+      # platform specifications, so clear them after activation.
+      - if: win
+        then:
+          - set CMAKE_GENERATOR_PLATFORM=
+          - set CMAKE_GENERATOR_TOOLSET=
       - python -m pip install . -vv --no-deps --no-build-isolation
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   number: 0
