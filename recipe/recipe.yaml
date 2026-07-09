@@ -1,5 +1,5 @@
 context:
-  version: "3.15"
+  version: "4.0.0"
 
 package:
   name: "hydra-image-processor"
@@ -7,28 +7,32 @@ package:
 
 source:
   url: https://github.com/ericwait/hydra-image-processor/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 3f24e4eaef9da55af2bb88b0ff72494dcfde13aa8df6d2b5da0210d06726d81f
-  patches:
-    - update-cuda-compatibility.patch
-    - add-cmake-install-target.patch
+  sha256: a3e2dd438e9c825d37491ecd2da048dddfe0222bd49f71138fff8a29ed263b15
 
 build:
   skip:
     - osx
     - match(cuda_compiler_version, "==None")
+  # scikit-build-core drives CMake, compiles the CUDA extension, and installs
+  # the package. conda-forge's compiler activation exports CMAKE_ARGS, which
+  # scikit-build-core forwards to CMake, so NO source patches are required.
   script:
-    - if: win
-      then:
-        - set "CXXFLAGS=%CXXFLAGS% /openmp:llvm"
-        - cmake %CMAKE_ARGS% -G Ninja -S . -B build
-        - cmake --build build --parallel %CPU_COUNT%
-      else:
-      - cmake ${CMAKE_ARGS} -G Ninja -S . -B build
-      - cmake --build build --parallel ${CPU_COUNT}
-    - cmake --install build
-  # Example: cuda129_np2_py314_h<hash>_<build_number>
+    env:
+      # Without this CMake picks the Visual Studio generator on Windows,
+      # which needs the CUDA VS-integration files that the conda-forge nvcc
+      # package does not ship. Ninja drives nvcc directly on all platforms.
+      CMAKE_GENERATOR: Ninja
+    content:
+      # The vs2022 activation exports CMAKE_GENERATOR_PLATFORM/TOOLSET for
+      # the Visual Studio generator when they are unset; Ninja rejects
+      # platform specifications, so clear them after activation.
+      - if: win
+        then:
+          - set CMAKE_GENERATOR_PLATFORM=
+          - set CMAKE_GENERATOR_TOOLSET=
+      - python -m pip install . -vv --no-deps --no-build-isolation
   string: cuda${{ cuda_compiler_version | version_to_buildstring }}_np${{ numpy | version_to_buildstring }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
-  number: 3
+  number: 0
 
 # c.f. https://github.com/conda-forge/cuda-feedstock/blob/main/recipe/doc/recipe_guide.md
 requirements:
@@ -48,6 +52,8 @@ requirements:
   host:
     - cuda-version ${{ cuda_compiler_version }}.*
     - python
+    - pip
+    - scikit-build-core
     - numpy
     - if: linux
       then: libgomp
@@ -55,11 +61,14 @@ requirements:
   run:
     - ${{ pin_compatible("cuda-version", lower_bound="x", upper_bound="x") }}
     - python
+    - numpy
 
 tests:
   - python:
       imports:
+        - hydra_image_processor
         - HIP
+        - Hydra
 
 about:
   summary: "GPU accelerated image processing library"
