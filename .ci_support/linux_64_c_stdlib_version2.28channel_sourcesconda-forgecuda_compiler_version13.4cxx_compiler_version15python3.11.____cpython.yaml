@@ -9,7 +9,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '13.0'
+- '13.4'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -30,3 +30,5 @@ zip_keys:
 - - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
+- - python
+  - channel_sources

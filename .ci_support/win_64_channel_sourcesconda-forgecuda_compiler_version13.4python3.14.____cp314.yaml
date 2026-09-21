@@ -7,7 +7,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '13.0'
+- '13.4'
 cxx_compiler:
 - vs2022
 numpy:
@@ -20,3 +20,6 @@ python:
 - 3.14.* *_cp314
 target_platform:
 - win-64
+zip_keys:
+- - python
+  - channel_sources
