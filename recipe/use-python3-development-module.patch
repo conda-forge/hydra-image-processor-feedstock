@@ -1,0 +1,56 @@
+From c2bc615a90a7323b5839247c38590f2273af080c Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Mon, 28 Sep 2026 01:05:48 -0600
+Subject: [PATCH] fix: Find only Python3 Development.Module for the extension
+
+The HydraPy extension module only needs the Python headers, not
+libpython. Requesting the full Development component also requires
+Development.Embed (libpython), which conda-forge ships in a separate
+libpython package starting with Python 3.15. Without it
+find_package(Python3) fails, the HydraPy target is never defined,
+and the build fails with "ninja: error: unknown target 'HydraPy'".
+
+Use Development.Module and link Python3::Module instead, which is
+the recommended way to build extension modules with FindPython.
+
+c.f. https://cmake.org/cmake/help/latest/module/FindPython3.html
+---
+ CMakeLists.txt              | 2 +-
+ src/c/Python/CMakeLists.txt | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a6689f..6b2b462 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,7 +31,7 @@ find_package(OpenMP)
+ 
+ # Find optional dependencies
+ find_package(Matlab COMPONENTS MAIN_PROGRAM OPTIONAL_COMPONENTS MEX_COMPILER)
+-find_package(Python3 COMPONENTS Development NumPy OPTIONAL)
++find_package(Python3 COMPONENTS Development.Module NumPy OPTIONAL)
+ 
+ 
+ # Setup backend Hydra CUDA library (static) for CUDA building
+diff --git a/src/c/Python/CMakeLists.txt b/src/c/Python/CMakeLists.txt
+index 1f0cb00..f6cfdc8 100644
+--- a/src/c/Python/CMakeLists.txt
++++ b/src/c/Python/CMakeLists.txt
+@@ -11,7 +11,7 @@ if ( USE_PROCESS_MUTEX )
+ endif()
+ 
+ # Link against Python and NumPy libraries
+-target_link_libraries(HydraPy PRIVATE HydraCudaStatic Python3::Python Python3::NumPy)
++target_link_libraries(HydraPy PRIVATE HydraCudaStatic Python3::Module Python3::NumPy)
+ 
+ # Change output library name to Hydra.<dll/so/dylib>
+ set_target_properties(HydraPy
+@@ -28,7 +28,7 @@ if ( WIN32 )
+ endif()
+ 
+ # Setup Python/NumPy include directories
+-target_include_directories(HydraPy PRIVATE Python3::Python Python3::NumPy)
++target_include_directories(HydraPy PRIVATE Python3::Module Python3::NumPy)
+ 
+ # Setup src include directories
+ target_include_directories(HydraPy

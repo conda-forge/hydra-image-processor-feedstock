@@ -8,6 +8,10 @@ package:
 source:
   url: https://github.com/ericwait/hydra-image-processor/archive/refs/tags/v${{ version }}.tar.gz
   sha256: a3e2dd438e9c825d37491ecd2da048dddfe0222bd49f71138fff8a29ed263b15
+  patches:
+    # Python 3.15+ on conda-forge ships libpython separately, so only
+    # request the headers needed for an extension module.
+    - use-python3-development-module.patch
 
 build:
   skip:
@@ -15,7 +19,7 @@ build:
     - match(cuda_compiler_version, "==None")
   # scikit-build-core drives CMake, compiles the CUDA extension, and installs
   # the package. conda-forge's compiler activation exports CMAKE_ARGS, which
-  # scikit-build-core forwards to CMake, so NO source patches are required.
+  # scikit-build-core forwards to CMake.
   script:
     env:
       # Without this CMake picks the Visual Studio generator on Windows,
